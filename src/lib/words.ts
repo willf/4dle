@@ -16,7 +16,7 @@ import { getToday } from './dateutils'
 import { getGuessStatuses } from './statuses'
 
 // 1 January 2022 Game Epoch
-export const firstGameDate = new Date(2022, 0)
+export const firstGameDate = new Date(2023, 0)
 export const periodInDays = 1
 
 export const isWordInWordList = (word: string) => {

@@ -33,8 +33,10 @@ import {
   WIN_MESSAGES,
   WORD_NOT_FOUND_MESSAGE,
 } from './constants/strings'
+import { VALID_GUESSES } from './constants/validGuesses'
 import { useAlert } from './context/AlertContext'
 import { isInAppBrowser } from './lib/browser'
+import { firstWord } from './lib/firstWord'
 import {
   getStoredIsHighContrastMode,
   loadGameStateFromLocalStorage,
@@ -86,18 +88,20 @@ function App() {
   const [guesses, setGuesses] = useState<string[]>(() => {
     const loaded = loadGameStateFromLocalStorage(isLatestGame)
     if (loaded?.solution !== solution) {
-      return []
+      return [firstWord()]
     }
     const gameWasWon = loaded.guesses.includes(solution)
     if (gameWasWon) {
       setIsGameWon(true)
     }
+
     if (loaded.guesses.length === MAX_CHALLENGES && !gameWasWon) {
       setIsGameLost(true)
       showErrorAlert(CORRECT_WORD_MESSAGE(solution), {
         persist: true,
       })
     }
+
     return loaded.guesses
   })
 
@@ -148,7 +152,7 @@ function App() {
   }
 
   const handleHardMode = (isHard: boolean) => {
-    if (guesses.length === 0 || localStorage.getItem('gameMode') === 'hard') {
+    if (guesses.length <= 1 || localStorage.getItem('gameMode') === 'hard') {
       setIsHardMode(isHard)
       localStorage.setItem('gameMode', isHard ? 'hard' : 'normal')
     } else {
